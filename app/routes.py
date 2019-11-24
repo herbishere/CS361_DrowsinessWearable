@@ -107,11 +107,11 @@ def phys_data():
                     <label class="form-control-label" for="phys_data_type">Metric</label>
                     <select class="form-control" id="phys_data_type" name="phys_data_type">
                         <option selected value="{}">{}</option>
-                    """.format(selected, sort_by[selected - 1 ])
+                    """.format(selected, sort_by[selected - 1])
 
 
     for i in range(len(sort_by)):
-        if sort_by[i] != request.form.get('phys_data_type'):
+        if i != selected - 1:
             output = output + """
                 <option value="{}">{}</option>""".format(i + 1, sort_by[i])
 
