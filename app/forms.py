@@ -14,6 +14,15 @@ class DriverForm(FlaskForm):
 class PhysDataForm(FlaskForm):
     phys_data_type = SelectField('Metric', choices =[(1, "Heart Rate"), (2, "Alert History")], default = 1)
     submit = SubmitField('Select Driver')
+    
+class PhysTable(Table):
+    date = Col('Date')
+    time = Col('Time')
+    heartrate = Col('Heart Rate', show = TRUE)
+    alert_status = Col('Alert Status', show = TRUE)
+    time_elapsed = Col('Time Elapsed', show = TRUE)
+    drowsy_score = Col('Overall Drowsiness Score', show = TRUE)
+    threshold_score = Col('Current Drowsiness threshold Score', show = TRUE)
 
 # -------------------------------------------------------------------------------------------------------------------
 # Forms for the "Wearable Information" Page   
