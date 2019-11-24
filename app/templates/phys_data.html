@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+<div class = "container">
+    <form action = "" method = "post">
+        <fieldset>
+            <legend>Select a type of pyshiological data to view:</legend>
+            <div class ="form-group required">
+                {{ form.phys_data_type.label(class="form-control-label") }}
+                {{ form.phys_data_type(class="form-control") }}
+            </div>
+            <div class = "form-group">
+                {{ form.submit(class="form-control") }}
+            </div>
+        </fieldset>
+    </form>
+    
+    <h3>Physiological Data Information:</h3>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Heart Rate</th>
+                <th>Alert Status</th>
+                <th>Time Elapsed Since Last Alert</th>
+            </tr>
+        </thead>
+        <!-- VVVV REPLACE WITH CALLS TO FILL FROM DATABASE DATA -->
+        <tbody>
+            <tr>
+                <td>11/24/2019</td>
+                <td>9:03:42:36</td>
+                <td>72</td>
+                <td>Awake</td>
+                <td>24.00.00</td>
+            </tr>
+                <td>11/24/2019</td>
+                <td>13:27:17:01</td>
+                <td>72</td>
+                <td>Drowsy</td>
+                <td>00.00.00</td>
+            <tr>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

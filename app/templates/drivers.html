@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+<div class = "container">
+    <form action = "" method = "post">
+        <fieldset>
+            <legend>Select a driver for your wearable:</legend>
+            <div class ="form-group required">
+                {{ form.wearable_name.label(class="form-control-label") }}
+                {{ form.wearable_name(class="form-control") }}
+            </div>
+            <div class = "form-group required">
+                {{ form.driver_name.label(class="form-control-label") }}
+                {{ form.driver_name(class="form-control") }}
+            </div>
+            <div class = "form-group">
+                {{ form.submit(class="form-control") }}
+            </div>
+        </fieldset>
+    </form>
+    
+    <h3>Available Drivers:</h3>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Device</th>
+                <th>Driver Name</th>
+                <th>Version</th>
+                <th>Release Date</th>
+                <th>Most Current?</th>
+            </tr>
+        </thead>
+        <!-- VVVV REPLACE WITH CALLS TO FILL FROM DATABASE DATA -->
+        <tbody>
+            <tr>
+                <td>Apple Watch</td>
+                <td>Driver 1</td>
+                <td>1.0</td>
+                <td>11/24/2019</td>
+                <td>Yes</td>
+            </tr>
+                <td>Fitbit</td>
+                <td>Driver 1</td>
+                <td>1.0</td>
+                <td>11/24/2109</td>
+                <td>Yes</td>
+            <tr>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, SelectField
+from wtforms.validators import DataRequired
+
+# -------------------------------------------------------------------------------------------------------------------
+# Forms for the "Select Driver" Page
+class DriverForm(FlaskForm):
+    wearable_name = SelectField('Wearable Name', choices =[(1, "My Wearable"), (2, "Your Wearable")], default = 1)
+    driver_name = SelectField('Driver Name', choices = [(1, "Driver 1"), (2, "Driver 2")], default = 1)
+    submit = SubmitField('Select Driver')
+
+# -------------------------------------------------------------------------------------------------------------------
+# Forms for the "Physiological Data" Page
+class PhysDataForm(FlaskForm):
+    phys_data_type = SelectField('Metric', choices =[(1, "Heart Rate"), (2, "Alert History")], default = 1)
+    submit = SubmitField('Select Driver')
+
+# -------------------------------------------------------------------------------------------------------------------
+# Forms for the "Wearable Information" Page   
+class WearableInfoForm(FlaskForm):
+    wearable_name = SelectField('Wearable Name', choices =[(1, "My Wearable"), (2, "Your Wearable")], default = 1)
+    submit = SubmitField('Select Driver')
