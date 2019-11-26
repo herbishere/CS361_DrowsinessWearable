@@ -2,6 +2,8 @@ from flask import render_template, flash, redirect, url_for, request
 from app import app
 from app.forms import DriverForm, PhysDataForm, WearableInfoForm
 
+from app.models import Driver, WearableInfo, PhysData
+
 @app.route('/')
 @app.route('/index')
 
@@ -26,30 +28,42 @@ def drivers():
 @app.route('/phys_data', methods=['GET', 'POST'])
 def phys_data():
 
-    data = {}
-    data[0] = {}
-    data[0]['date'] = '2019-12-01'
-    data[0]['time'] = '12:01 PM'
-    data[0]['heartrate'] = 57
-    data[0]['overalldrowsiness'] = 0.3
-    data[0]['alertstatus'] = 'Awake'
-    data[0]['timeelapsed'] = '47:35:24'
+    physData = PhysData.query.all()
+    data = []
+    for x in physData:
+        y = dict()
+        y['date'] = x.date
+        y['time'] = x.time
+        y['heartrate'] = x.heartrate
+        y['overalldrowsiness'] = x.overalldrowsiness
+        y['alertstatus'] = x.alertstatus
+        y['timeelapsed'] = x.timeelapsed
+        data.append(y)
+        
+    #data = {}
+    #data[0] = {}
+    #data[0]['date'] = '2019-12-01'
+    #data[0]['time'] = '12:01 PM'
+    #data[0]['heartrate'] = 57
+    #data[0]['overalldrowsiness'] = 0.3
+    #data[0]['alertstatus'] = 'Awake'
+    #data[0]['timeelapsed'] = '47:35:24'
 
-    data[1] = {}
-    data[1]['date'] = '2019-12-01'
-    data[1]['time'] = '12:05 PM'
-    data[1]['heartrate'] = 58
-    data[1]['overalldrowsiness'] = 0.2
-    data[1]['alertstatus'] = 'Awake'
-    data[1]['timeelapsed'] = '47:35:24'
+    #data[1] = {}
+    #data[1]['date'] = '2019-12-01'
+    #data[1]['time'] = '12:05 PM'
+    #data[1]['heartrate'] = 58
+    #data[1]['overalldrowsiness'] = 0.2
+    #data[1]['alertstatus'] = 'Awake'
+    #data[1]['timeelapsed'] = '47:35:24'
 
-    data[2] = {}
-    data[2]['date'] = '2019-12-01'
-    data[2]['time'] = '12:11 PM'
-    data[2]['heartrate'] = 91
-    data[2]['overalldrowsiness'] = 0.05
-    data[2]['alertstatus'] = 'Awake'
-    data[2]['timeelapsed'] = '47:38:24'
+    #data[2] = {}
+    #data[2]['date'] = '2019-12-01'
+    #data[2]['time'] = '12:11 PM'
+    #data[2]['heartrate'] = 91
+    #data[2]['overalldrowsiness'] = 0.05
+    #data[2]['alertstatus'] = 'Awake'
+    #data[2]['timeelapsed'] = '47:38:24'
 
     sort_by = {}
     sort_by[0] = "Heart Rate"
