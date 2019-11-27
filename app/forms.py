@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired
 from flask_table import Table, Col
+from app.models import WearableInfo
 
 # -------------------------------------------------------------------------------------------------------------------
 # Forms for the "Select Driver" Page
@@ -28,5 +29,14 @@ class PhysTable(Table):
 # -------------------------------------------------------------------------------------------------------------------
 # Forms for the "Wearable Information" Page   
 class WearableInfoForm(FlaskForm):
-    wearable_name = SelectField('Wearable Name', choices =[(1, "My Wearable"), (2, "Your Wearable")], default = 1)
+    wearables = WearableInfo.query.all()
+    choices2 = []           #fill with query data to display
+    #print(wearables)
+    for wearable in wearables:
+        x = (wearable.id, wearable.type)        #change here to display different wearable attributes
+
+        choices2.append(x)
+
+
+    wearable_name = SelectField('Wearable Name', choices = choices2, default = 1)
     submit = SubmitField('Select Driver')
