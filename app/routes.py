@@ -4,27 +4,28 @@ from app.forms import DriverForm, PhysDataForm, WearableInfoForm
 
 from app.models import Driver, WearableInfo, PhysData
 
+
 @app.route('/')
 @app.route('/index')
-
 # -------------------------------------------------------------------------------------------------------------------
 # Get the main home page
 def index():
-    return render_template('index.html', title = 'Anti-Drowsiness Wearable Home')
+    return render_template('index.html', title='Anti-Drowsiness Wearable Home')
 
 # -------------------------------------------------------------------------------------------------------------------
-# Get the Driver Selection page    
+# Get the Driver Selection page
 @app.route('/drivers', methods=['GET', 'POST'])
 def drivers():
+    drivers = Driver.query.all()
     form = DriverForm()
     if form.validate_on_submit():
         flash('Driver selection required'.format(
             form.wearable.name.data, form.driver_name.data))
         return redirect('/index')
-    return render_template('drivers.html', title = 'Driver Selection', form=form)
+    return render_template('drivers.html', title='Driver Selection', form=form, drivers=drivers)
 
 # -------------------------------------------------------------------------------------------------------------------
-# Get the Physiological Data page   
+# Get the Physiological Data page
 @app.route('/phys_data', methods=['GET', 'POST'])
 def phys_data():
 
@@ -39,7 +40,7 @@ def phys_data():
         y['alertstatus'] = x.alertstatus
         y['timeelapsed'] = x.timeelapsed
         data.append(y)
-        
+
     #data = {}
     #data[0] = {}
     #data[0]['date'] = '2019-12-01'
@@ -72,7 +73,6 @@ def phys_data():
     sort_by[3] = "Drowsiness Threshold Score"
     sort_by[4] = "Alert Status"
     sort_by[5] = "All Data"
-
 
     if None != request.form.get('phys_data_type'):
         selected = int(request.form.get('phys_data_type'))
@@ -123,7 +123,6 @@ def phys_data():
                         <option selected value="{}">{}</option>
                     """.format(selected, sort_by[selected - 1])
 
-
     for i in range(len(sort_by)):
         if i != selected - 1:
             output = output + """
@@ -147,27 +146,26 @@ def phys_data():
     output = output + "<td>Time</td>"
 
     if selected == 1:
-            output = output + "<td>Heart Rate</td>"
+        output = output + "<td>Heart Rate</td>"
     elif selected == 2:
-            output = output + "<td>Alert Status</td>"
-            output = output + "<td>Time Elapsed</td>"
+        output = output + "<td>Alert Status</td>"
+        output = output + "<td>Time Elapsed</td>"
     elif selected == 3:
-            output = output + "<td>Overall Drowsiness</td>"
-            output = output + "<td>Time Elapsed</td>"
+        output = output + "<td>Overall Drowsiness</td>"
+        output = output + "<td>Time Elapsed</td>"
     elif selected == 4:
-            output = output + "<td>Alert Status</td>"
-            output = output + "<td>Overall Drowsiness</td>"
-            output = output + "<td>Time Elapsed</td>"
+        output = output + "<td>Alert Status</td>"
+        output = output + "<td>Overall Drowsiness</td>"
+        output = output + "<td>Time Elapsed</td>"
     elif selected == 5:
-            output = output + "<td>Alert Status</td>"
-            output = output + "<td>Overall Drowsiness</td>"
-            output = output + "<td>Time Elapsed</td>"
+        output = output + "<td>Alert Status</td>"
+        output = output + "<td>Overall Drowsiness</td>"
+        output = output + "<td>Time Elapsed</td>"
     elif selected == 6:
-            output = output + "<td>Heart Rate</td>"
-            output = output + "<td>Alert Status</td>"
-            output = output + "<td>Overall Drowsiness</td>"
-            output = output + "<td>Time Elapsed</td>"
-
+        output = output + "<td>Heart Rate</td>"
+        output = output + "<td>Alert Status</td>"
+        output = output + "<td>Overall Drowsiness</td>"
+        output = output + "<td>Time Elapsed</td>"
 
     output = output + """
         </tr></thead>
@@ -176,32 +174,34 @@ def phys_data():
 
     for i in range(len(data)):
         output = output + "<tr>"
-        output = output + "<td>{}</td>".format(data[i]['date']);
-        output = output + "<td>{}</td>".format(data[i]['time']);
+        output = output + "<td>{}</td>".format(data[i]['date'])
+        output = output + "<td>{}</td>".format(data[i]['time'])
 
         if selected == 1:
-                output = output + "<td>{}</td>".format(data[i]['heartrate']);
+            output = output + "<td>{}</td>".format(data[i]['heartrate'])
         elif selected == 2:
-                output = output + "<td>{}</td>".format(data[i]['alertstatus']);
-                output = output + "<td>{}</td>".format(data[i]['timeelapsed']);
+            output = output + "<td>{}</td>".format(data[i]['alertstatus'])
+            output = output + "<td>{}</td>".format(data[i]['timeelapsed'])
         elif selected == 3:
-                output = output + "<td>{}</td>".format(data[i]['overalldrowsiness']);
-                output = output + "<td>{}</td>".format(data[i]['timeelapsed']);
+            output = output + \
+                "<td>{}</td>".format(data[i]['overalldrowsiness'])
+            output = output + "<td>{}</td>".format(data[i]['timeelapsed'])
         elif selected == 4:
-                output = output + "<td>{}</td>".format(data[i]['alertstatus']);
-                output = output + "<td>{}</td>".format(data[i]['overalldrowsiness']);
-                output = output + "<td>{}</td>".format(data[i]['timeelapsed']);
+            output = output + "<td>{}</td>".format(data[i]['alertstatus'])
+            output = output + \
+                "<td>{}</td>".format(data[i]['overalldrowsiness'])
+            output = output + "<td>{}</td>".format(data[i]['timeelapsed'])
         elif selected == 5:
-                output = output + "<td>{}</td>".format(data[i]['alertstatus']);
-                output = output + "<td>{}</td>".format(data[i]['overalldrowsiness']);
-                output = output + "<td>{}</td>".format(data[i]['timeelapsed']);
+            output = output + "<td>{}</td>".format(data[i]['alertstatus'])
+            output = output + \
+                "<td>{}</td>".format(data[i]['overalldrowsiness'])
+            output = output + "<td>{}</td>".format(data[i]['timeelapsed'])
         elif selected == 6:
-                output = output + "<td>{}</td>".format(data[i]['heartrate']);
-                output = output + "<td>{}</td>".format(data[i]['alertstatus']);
-                output = output + "<td>{}</td>".format(data[i]['overalldrowsiness']);
-                output = output + "<td>{}</td>".format(data[i]['timeelapsed']);
-
-
+            output = output + "<td>{}</td>".format(data[i]['heartrate'])
+            output = output + "<td>{}</td>".format(data[i]['alertstatus'])
+            output = output + \
+                "<td>{}</td>".format(data[i]['overalldrowsiness'])
+            output = output + "<td>{}</td>".format(data[i]['timeelapsed'])
 
         output = output + "</tr>"
     output = output + """
@@ -218,7 +218,7 @@ def phys_data():
 
 
 # -------------------------------------------------------------------------------------------------------------------
-# Get the Wearable information page    
+# Get the Wearable information page
 @app.route('/wearable_info', methods=['GET', 'POST'])
 def wearable_info():
     wearables = {}
@@ -235,7 +235,7 @@ def wearable_info():
     wearables[1]["type"] = "Apple Watch"
     wearables[1]["driver"] = 2
 
-    selected = 0;
+    selected = 0
 
     if request.form.get('wearable_name') != None:
         selected = int(request.form.get('wearable_name'))
