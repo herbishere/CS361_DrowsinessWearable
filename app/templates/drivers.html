@@ -7,10 +7,12 @@
         <fieldset>
             <legend>Select a driver for your wearable:</legend>
             <div class="form-group required">
+                {{ form.csrf_token }}
                 {{ form.wearable_name.label(class="form-control-label") }}
                 {{ form.wearable_name(class="form-control") }}
             </div>
             <div class="form-group required">
+                {{ form.csrf_token }}
                 {{ form.driver_name.label(class="form-control-label") }}
                 {{ form.driver_name(class="form-control") }}
             </div>

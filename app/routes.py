@@ -18,10 +18,14 @@ def index():
 def drivers():
     drivers = Driver.query.all()
     form = DriverForm()
+    #print(form.errors)
     if form.validate_on_submit():
+        print("good")
         flash('Driver selection required'.format(
-            form.wearable.name.data, form.driver_name.data))
+            form.wearable_name.data, form.driver_name.data))
         return redirect('/index')
+
+    #print(form.errors)
     return render_template('drivers.html', title='Driver Selection', form=form, drivers=drivers)
 
 # -------------------------------------------------------------------------------------------------------------------
@@ -222,7 +226,20 @@ def phys_data():
 @app.route('/wearable_info', methods=['GET', 'POST'])
 def wearable_info():
     wearables = WearableInfo.query.all()
+    # print("Printing wearables...")
+    # print(wearables)
+
+
     form = WearableInfoForm()
+
+    if request.method == "POST":
+        # return "Submitted form"
+        wearable_id = request.form.get('wearable_name')     #get id from post
+        # print(wearable_id)
+        wearables = WearableInfo.query.filter_by(id=wearable_id).first() #get specific wearable
+        # print(wearable.name)
+        return render_template('wearable_info.html', title='Wearable Info Selection', form=form, wearables=wearables)
+
     if form.validate_on_submit():
         flash('Wearable selection required'.format(
             form.wearable.name.data))

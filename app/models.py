@@ -21,7 +21,7 @@ class WearableInfo(db.Model):
     selectedDriver = db.Column(db.String(128))
 
     def __repr__(self):
-        return '<Wearable: {}; Type: {}>'.format(self.name, self.type)
+        return '<Wearable: {}; Battery: {}; Type: {}>; Selected Driver: {}'.format(self.name, self.battery, self.type, self.selectedDriver)
 
 
 class PhysData(db.Model):
@@ -35,3 +35,4 @@ class PhysData(db.Model):
 
     def __repr__(self):
         return '<Date: {}; Drowsiness: {}; Alert Status: {}>'.format(self.date, self.overalldrowsiness, self.alertstatus)
+

@@ -31,9 +31,9 @@ class PhysTable(Table):
 class WearableInfoForm(FlaskForm):
     wearables = WearableInfo.query.all()
     choices2 = []           #fill with query data to display
-    #print(wearables)
+    # print(wearables)
     for wearable in wearables:
-        x = (wearable.id, wearable.type)        #change here to display different wearable attributes
+        x = (wearable.id, wearable.name)        #change here to display different wearable attributes in dropdown
 
         choices2.append(x)
 

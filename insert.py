@@ -35,7 +35,15 @@ d = WearableInfo(name='My Wearable', battery=90, type='Apple Watch', selectedDri
 db.session.add(d)
 db.session.commit()
 
-d = WearableInfo(name='My Wearable', battery=100, type='Fitbit', selectedDriver='Fitbit Driver1_000')
+d = WearableInfo(name='Your Wearable', battery=100, type='Fitbit', selectedDriver='Fitbit Driver1_000')
+db.session.add(d)
+db.session.commit()
+
+d = WearableInfo(name='His Wearable', battery=50, type='Necklace', selectedDriver='Necklace Driver1_000')
+db.session.add(d)
+db.session.commit()
+
+d = WearableInfo(name='Her Wearable', battery=25, type='Back Brace', selectedDriver='BackBrace Driver1_000')
 db.session.add(d)
 db.session.commit()
 
