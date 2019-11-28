@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField
+from wtforms import StringField, SubmitField, SelectField, HiddenField
 from wtforms.validators import DataRequired
 from flask_table import Table, Col
 from app.models import WearableInfo
@@ -7,8 +7,15 @@ from app.models import WearableInfo
 # -------------------------------------------------------------------------------------------------------------------
 # Forms for the "Select Driver" Page
 class DriverForm(FlaskForm):
-    wearable_name = SelectField('Wearable Name', choices =[(1, "My Wearable"), (2, "Your Wearable")], default = 1)
-    driver_name = SelectField('Driver Name', choices = [(1, "Driver 1"), (2, "Driver 2")], default = 1)
+    # wearable_name = SelectField('Wearable Name', choices =[(1, "My Wearable"), (2, "Your Wearable")], default = 1)
+    # driver_name = SelectField('Driver Name', choices = [(1, "Driver 1"), (2, "Driver 2")], default = 1)
+    form_name = HiddenField('Form Name')
+
+
+    wearable_name = SelectField('Wearable Name', validators=[DataRequired()], id='select_wearable')
+    driver_name = SelectField('Driver Name', validators=[DataRequired()], id='select_driver')
+
+
     submit = SubmitField('Select Driver')
 
 # -------------------------------------------------------------------------------------------------------------------
