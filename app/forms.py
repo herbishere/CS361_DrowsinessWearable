@@ -25,13 +25,14 @@ class PhysDataForm(FlaskForm):
     submit = SubmitField('Select Driver')
     
 class PhysTable(Table):
+    classes = ['table','table-condensed']
     date = Col('Date')
     time = Col('Time')
-    heartrate = Col('Heart Rate', show = True)
-    alert_status = Col('Alert Status', show = True)
-    time_elapsed = Col('Time Elapsed', show = True)
-    drowsy_score = Col('Overall Drowsiness Score', show = True)
-    threshold_score = Col('Current Drowsiness threshold Score', show = True)
+    heartrate = Col('Heart Rate', show=False)       #don't show these columns unless called for
+    alertstatus = Col('Alert Status', show=False)
+    timeelapsed = Col('Time Elapsed', show=False)
+    overalldrowsiness = Col('Overall Drowsiness Score', show=False)
+    threshold_score = Col('Current Drowsiness threshold Score', show=False)
 
 # -------------------------------------------------------------------------------------------------------------------
 # Forms for the "Wearable Information" Page   
