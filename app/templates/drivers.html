@@ -48,4 +48,50 @@
         </tbody>
     </table>
 </div>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script charset="utf-8" type="text/javascript">
+
+$(function() {
+
+    // jQuery selection for the 2 select boxes
+    var dropdown = {
+        wearable: $('#select_wearable'),
+        driver: $('#select_driver')
+    };
+
+    // call to update on load
+    updateDrivers();
+
+    // function to call XHR and update drivers dropdown
+    function updateDrivers() {
+        var send = {
+            wearable: dropdown.wearable.val()
+        };
+
+        dropdown.driver.attr('disabled', 'disabled');
+        dropdown.driver.empty();
+        $.getJSON("{{ url_for('_get_drivers') }}", send, function(data) {
+            data.forEach(function(item) {       //fill in the new drivers based on wearable selected
+                dropdown.driver.append(
+                    $('<option>', {
+                        value: item[0],
+                        text: item[1]
+                    })
+                );
+            });
+
+            dropdown.driver.removeAttr('disabled');
+        });
+    }
+
+    // event listener to state dropdown change
+    dropdown.wearable.on('change', function() {     //when wearable is clicked on from dropdown
+        updateDrivers();
+    });
+
+});
+
+</script>
 {% endblock %}
