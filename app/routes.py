@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from app import app
 from app.forms import DriverForm, PhysDataForm, WearableInfoForm
 
@@ -14,19 +14,44 @@ def index():
 
 # -------------------------------------------------------------------------------------------------------------------
 # Get the Driver Selection page
-@app.route('/drivers', methods=['GET', 'POST'])
+@app.route('/drivers/', methods=['GET', 'POST'])
 def drivers():
-    drivers = Driver.query.all()
-    form = DriverForm()
-    #print(form.errors)
-    if form.validate_on_submit():
-        print("good")
-        flash('Driver selection required'.format(
-            form.wearable_name.data, form.driver_name.data))
-        return redirect('/index')
+    drivers = Driver.query.all()            #get all drivers to display
+    form = DriverForm(form_name='Drivers')
 
-    #print(form.errors)
-    return render_template('drivers.html', title='Driver Selection', form=form, drivers=drivers)
+    #set choices for the dropdown menus
+    form.wearable_name.choices = [(row.id, row.name) for row in WearableInfo.query.all()]
+    form.driver_name.choices = [(row.id, row.driverName) for row in Driver.query.all()]
+
+    if request.method == 'GET':
+        return render_template('drivers.html', title='Driver Selection', form=form, drivers=drivers)
+
+    if form.validate_on_submit() and request.form['form_name'] == 'Drivers':
+        flash('wearable: %s, driver: %s' % (form.wearable_name, form.driver_name))
+
+    print("Going to redirect...")
+    return redirect(url_for('drivers'))
+
+    # if request.method == "POST":
+    #     print("Posting on drivers")
+    #     driver_id = request.form.get('wearable_name')     #get id from post
+    #     # print(wearable_id)
+    #     driver = Driver.query.filter_by(id=driver_id) #get specific wearable
+    #     print(driver)
+    #
+    #     return render_template('drivers.html', title='Driver Selection', form=form, drivers=drivers, driver=driver)
+    #
+    # else:
+    #
+    # # if form.validate_on_submit():
+    # #     print("good")
+    # #     flash('Driver selection required'.format(
+    # #         form.wearable_name.data, form.driver_name.data))
+    # #     return redirect('/index')
+    #
+    # #
+    # # print(form.errors)
+    #     return render_template('drivers.html', title='Driver Selection', form=form, drivers=drivers)
 
 # -------------------------------------------------------------------------------------------------------------------
 # Get the Physiological Data page
@@ -336,3 +361,14 @@ def wearable_info():
     # </html>""".format(wearables[selected]['name'], wearables[selected]['battery'], wearables[selected]['type'], wearables[selected]['driver'])
     #
     # return output
+
+@app.route('/_get_drivers/')    #view to respond to xhr requests for drivers depending on wearable selection
+def _get_drivers():
+    wearable = request.args.get('wearable', '1', type=str)      #parse query string for wearable id
+    wearable = WearableInfo.query.filter_by(id = wearable).first() #get the type of device from wearable id
+
+    #(row.id, Name displayed in dropdown
+    drivers = [(row.id, row.driverName) for row in Driver.query.filter_by(device=wearable.type).all()] #get available drivers for device type
+
+    return jsonify(drivers)     #send to jquery code to fill in
+
