@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from app import app
-from app.forms import DriverForm, PhysDataForm, WearableInfoForm
+from app.forms import DriverForm, PhysDataForm, WearableInfoForm, PhysTable
 
 from app.models import Driver, WearableInfo, PhysData
 
@@ -57,193 +57,254 @@ def drivers():
 # Get the Physiological Data page
 @app.route('/phys_data', methods=['GET', 'POST'])
 def phys_data():
+    physData = PhysData.query.all()            #get all drivers to display
+    form = PhysDataForm()
+    table = PhysTable(physData)
 
-    physData = PhysData.query.all()
-    data = []
-    for x in physData:
-        y = dict()
-        y['date'] = x.date
-        y['time'] = x.time
-        y['heartrate'] = x.heartrate
-        y['overalldrowsiness'] = x.overalldrowsiness
-        y['alertstatus'] = x.alertstatus
-        y['timeelapsed'] = x.timeelapsed
-        data.append(y)
+    #set choices for the dropdown menus
+    #form.wearable_name.choices = [(row.id, row.name) for row in WearableInfo.query.all()]
+    #form.driver_name.choices = [(row.id, row.driverName) for row in Driver.query.all()]
 
-    #data = {}
-    #data[0] = {}
-    #data[0]['date'] = '2019-12-01'
-    #data[0]['time'] = '12:01 PM'
-    #data[0]['heartrate'] = 57
-    #data[0]['overalldrowsiness'] = 0.3
-    #data[0]['alertstatus'] = 'Awake'
-    #data[0]['timeelapsed'] = '47:35:24'
+    if request.method == 'GET':
+        return render_template('phys_data.html', title='Driver Selection', form=form, physData = physData )
 
-    #data[1] = {}
-    #data[1]['date'] = '2019-12-01'
-    #data[1]['time'] = '12:05 PM'
-    #data[1]['heartrate'] = 58
-    #data[1]['overalldrowsiness'] = 0.2
-    #data[1]['alertstatus'] = 'Awake'
-    #data[1]['timeelapsed'] = '47:35:24'
+    elif request.method == 'POST':
+        selected = request.form.get('phys_data_type')       #phys data type selection
+        print(selected)
+        table.heartrate.show = table.alertstatus.show = table.timeelapsed.show = table.overalldrowsiness.show = False
 
-    #data[2] = {}
-    #data[2]['date'] = '2019-12-01'
-    #data[2]['time'] = '12:11 PM'
-    #data[2]['heartrate'] = 91
-    #data[2]['overalldrowsiness'] = 0.05
-    #data[2]['alertstatus'] = 'Awake'
-    #data[2]['timeelapsed'] = '47:38:24'
+        #each case adjusts which columns need to be shown
+        if int(selected) == 1:
+            physData= PhysData.query.with_entities(PhysData.date, PhysData.time, PhysData.heartrate)
+            table = PhysTable(physData)
+            table.heartrate.show = True
 
-    sort_by = {}
-    sort_by[0] = "Heart Rate"
-    sort_by[1] = "Alert History"
-    sort_by[2] = "Alertness Score"
-    sort_by[3] = "Drowsiness Threshold Score"
-    sort_by[4] = "Alert Status"
-    sort_by[5] = "All Data"
+        elif int(selected) == 2:
+            physData= PhysData.query.with_entities(PhysData.date, PhysData.time, PhysData.alertstatus, PhysData.timeelapsed)
+            table = PhysTable(physData)
+            table.alertstatus.show = table.timeelapsed.show = True
 
-    if None != request.form.get('phys_data_type'):
-        selected = int(request.form.get('phys_data_type'))
-    else:
-        selected = 1
+        elif int(selected) == 3:
+            physData= PhysData.query.with_entities(PhysData.date, PhysData.time, PhysData.overalldrowsiness, PhysData.timeelapsed)
+            table = PhysTable(physData)
+            table.overalldrowsiness.show = table.timeelapsed.show = True
 
-    output = """<!DOCTYPE html>
-    <html>
-      <head>
-        <title>
-        Physiological Data
-    </title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- Bootstrap -->
-        <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-      </head>
-      <body>
-        <nav class="navbar navbar-default">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="/index">Anti-Drowsiness Wearable</a>
-                </div>
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <li><a href="/index">Home</a></li>
-                        <li><a href="/drivers">Select Drivers</a></li>
-                        <li><a href="/phys_data">Physiological Data</a></li>
-                        <li><a href="/wearable_info">Wearable Information</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <div class="container">
+        elif int(selected) == 4:
+            physData= PhysData.query.with_entities(PhysData.date, PhysData.time, PhysData.alertstatus, PhysData.overalldrowsiness, PhysData.timeelapsed)
+            table = PhysTable(physData)
+            table.alertstatus.show = table.overalldrowsiness.show = table.timeelapsed.show = True
 
-    <div class = "container">
-        <form action = "" method = "post">
-            <fieldset>
-                <legend>Select a type of pyshiological data to view:</legend>
-                <div class ="form-group required">
-                    <label class="form-control-label" for="phys_data_type">Metric</label>
-                    <select class="form-control" id="phys_data_type" name="phys_data_type">
-                        <option selected value="{}">{}</option>
-                    """.format(selected, sort_by[selected - 1])
+        elif int(selected) == 5:
+            physData= PhysData.query.with_entities(PhysData.date, PhysData.time, PhysData.alertstatus, PhysData.overalldrowsiness, PhysData.timeelapsed)
+            table = PhysTable(physData)
+            table.alertstatus.show = table.overalldrowsiness.show = table.timeelapsed.show = True
 
-    for i in range(len(sort_by)):
-        if i != selected - 1:
-            output = output + """
-                <option value="{}">{}</option>""".format(i + 1, sort_by[i])
+        elif int(selected) == 6: #All data
+            physData= PhysData.query.all()
+            table = PhysTable(physData)
+            table.heartrate.show = table.alertstatus.show = table.timeelapsed.show = table.overalldrowsiness.show = True
 
-    output = output + """
-                    </select>
-                </div>
-                <div class = "form-group">
-                    <input class="form-control" id="submit" name="submit" type="submit" value="Select Driver">
-                </div>
-            </fieldset>
-        </form>
+        else:
 
-        <h3>Physiological Data Information:</h3>
+            physData=  PhysData.query.all()
+            table = PhysTable(physData)
+            table.heartrate.show = table.alertstatus.show = table.timeelapsed.show = table.overalldrowsiness.show = True
 
-        <table class="table">
-            <thead><tr>"""
+        return render_template('phys_data.html', title='Driver Selection', form=form, table = table)
 
-    output = output + "<td>Date</td>"
-    output = output + "<td>Time</td>"
+    if form.validate_on_submit() and request.form['form_name'] == 'Drivers':
+        flash('wearable: %s, driver: %s' % (form.wearable_name, form.driver_name))
 
-    if selected == 1:
-        output = output + "<td>Heart Rate</td>"
-    elif selected == 2:
-        output = output + "<td>Alert Status</td>"
-        output = output + "<td>Time Elapsed</td>"
-    elif selected == 3:
-        output = output + "<td>Overall Drowsiness</td>"
-        output = output + "<td>Time Elapsed</td>"
-    elif selected == 4:
-        output = output + "<td>Alert Status</td>"
-        output = output + "<td>Overall Drowsiness</td>"
-        output = output + "<td>Time Elapsed</td>"
-    elif selected == 5:
-        output = output + "<td>Alert Status</td>"
-        output = output + "<td>Overall Drowsiness</td>"
-        output = output + "<td>Time Elapsed</td>"
-    elif selected == 6:
-        output = output + "<td>Heart Rate</td>"
-        output = output + "<td>Alert Status</td>"
-        output = output + "<td>Overall Drowsiness</td>"
-        output = output + "<td>Time Elapsed</td>"
+    print("Going to redirect...")
+    return redirect(url_for('phys_data'))
 
-    output = output + """
-        </tr></thead>
-        <!-- VVVV REPLACE WITH CALLS TO FILL FROM DATABASE DATA -->
-        <tbody>"""
 
-    for i in range(len(data)):
-        output = output + "<tr>"
-        output = output + "<td>{}</td>".format(data[i]['date'])
-        output = output + "<td>{}</td>".format(data[i]['time'])
-
-        if selected == 1:
-            output = output + "<td>{}</td>".format(data[i]['heartrate'])
-        elif selected == 2:
-            output = output + "<td>{}</td>".format(data[i]['alertstatus'])
-            output = output + "<td>{}</td>".format(data[i]['timeelapsed'])
-        elif selected == 3:
-            output = output + \
-                "<td>{}</td>".format(data[i]['overalldrowsiness'])
-            output = output + "<td>{}</td>".format(data[i]['timeelapsed'])
-        elif selected == 4:
-            output = output + "<td>{}</td>".format(data[i]['alertstatus'])
-            output = output + \
-                "<td>{}</td>".format(data[i]['overalldrowsiness'])
-            output = output + "<td>{}</td>".format(data[i]['timeelapsed'])
-        elif selected == 5:
-            output = output + "<td>{}</td>".format(data[i]['alertstatus'])
-            output = output + \
-                "<td>{}</td>".format(data[i]['overalldrowsiness'])
-            output = output + "<td>{}</td>".format(data[i]['timeelapsed'])
-        elif selected == 6:
-            output = output + "<td>{}</td>".format(data[i]['heartrate'])
-            output = output + "<td>{}</td>".format(data[i]['alertstatus'])
-            output = output + \
-                "<td>{}</td>".format(data[i]['overalldrowsiness'])
-            output = output + "<td>{}</td>".format(data[i]['timeelapsed'])
-
-        output = output + "</tr>"
-    output = output + """
-            </tbody>
-        </table>
-    </div>
-        </div>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-      </body>
-    </html>
-    """
-    return output
+    # physData = PhysData.query.all()
+    # data = []
+    # for x in physData:
+    #     y = dict()
+    #     y['date'] = x.date
+    #     y['time'] = x.time
+    #     y['heartrate'] = x.heartrate
+    #     y['overalldrowsiness'] = x.overalldrowsiness
+    #     y['alertstatus'] = x.alertstatus
+    #     y['timeelapsed'] = x.timeelapsed
+    #     data.append(y)
+    #
+    # # #data = {}
+    # # #data[0] = {}
+    # # #data[0]['date'] = '2019-12-01'
+    # # #data[0]['time'] = '12:01 PM'
+    # # #data[0]['heartrate'] = 57
+    # # #data[0]['overalldrowsiness'] = 0.3
+    # # #data[0]['alertstatus'] = 'Awake'
+    # # #data[0]['timeelapsed'] = '47:35:24'
+    # #
+    # # #data[1] = {}
+    # # #data[1]['date'] = '2019-12-01'
+    # # #data[1]['time'] = '12:05 PM'
+    # # #data[1]['heartrate'] = 58
+    # # #data[1]['overalldrowsiness'] = 0.2
+    # # #data[1]['alertstatus'] = 'Awake'
+    # # #data[1]['timeelapsed'] = '47:35:24'
+    # #
+    # # #data[2] = {}
+    # # #data[2]['date'] = '2019-12-01'
+    # # #data[2]['time'] = '12:11 PM'
+    # # #data[2]['heartrate'] = 91
+    # # #data[2]['overalldrowsiness'] = 0.05
+    # # #data[2]['alertstatus'] = 'Awake'
+    # # #data[2]['timeelapsed'] = '47:38:24'
+    #
+    # sort_by = {}
+    # sort_by[0] = "Heart Rate"
+    # sort_by[1] = "Alert History"
+    # sort_by[2] = "Alertness Score"
+    # sort_by[3] = "Drowsiness Threshold Score"
+    # sort_by[4] = "Alert Status"
+    # sort_by[5] = "All Data"
+    #
+    # if None != request.form.get('phys_data_type'):
+    #     selected = int(request.form.get('phys_data_type'))
+    # else:
+    #     selected = 1
+    #
+    # output = """<!DOCTYPE html>
+    # <html>
+    #   <head>
+    #     <title>
+    #     Physiological Data
+    # </title>
+    #     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    #     <!-- Bootstrap -->
+    #     <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    #   </head>
+    #   <body>
+    #     <nav class="navbar navbar-default">
+    #         <div class="container">
+    #             <div class="navbar-header">
+    #                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+    #                     <span class="sr-only">Toggle navigation</span>
+    #                     <span class="icon-bar"></span>
+    #                     <span class="icon-bar"></span>
+    #                     <span class="icon-bar"></span>
+    #                 </button>
+    #                 <a class="navbar-brand" href="/index">Anti-Drowsiness Wearable</a>
+    #             </div>
+    #             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    #                 <ul class="nav navbar-nav">
+    #                     <li><a href="/index">Home</a></li>
+    #                     <li><a href="/drivers">Select Drivers</a></li>
+    #                     <li><a href="/phys_data">Physiological Data</a></li>
+    #                     <li><a href="/wearable_info">Wearable Information</a></li>
+    #                 </ul>
+    #             </div>
+    #         </div>
+    #     </nav>
+    #     <div class="container">
+    #
+    # <div class = "container">
+    #     <form action = "" method = "post">
+    #         <fieldset>
+    #             <legend>Select a type of pyshiological data to view:</legend>
+    #             <div class ="form-group required">
+    #                 <label class="form-control-label" for="phys_data_type">Metric</label>
+    #                 <select class="form-control" id="phys_data_type" name="phys_data_type">
+    #                     <option selected value="{}">{}</option>
+    #                 """.format(selected, sort_by[selected - 1])
+    #
+    # for i in range(len(sort_by)):
+    #     if i != selected - 1:
+    #         output = output + """
+    #             <option value="{}">{}</option>""".format(i + 1, sort_by[i])
+    #
+    # output = output + """
+    #                 </select>
+    #             </div>
+    #             <div class = "form-group">
+    #                 <input class="form-control" id="submit" name="submit" type="submit" value="Select Driver">
+    #             </div>
+    #         </fieldset>
+    #     </form>
+    #
+    #     <h3>Physiological Data Information:</h3>
+    #
+    #     <table class="table">
+    #         <thead><tr>"""
+    #
+    # output = output + "<td>Date</td>"
+    # output = output + "<td>Time</td>"
+    #
+    # if selected == 1:
+    #     output = output + "<td>Heart Rate</td>"
+    # elif selected == 2:
+    #     output = output + "<td>Alert Status</td>"
+    #     output = output + "<td>Time Elapsed</td>"
+    # elif selected == 3:
+    #     output = output + "<td>Overall Drowsiness</td>"
+    #     output = output + "<td>Time Elapsed</td>"
+    # elif selected == 4:
+    #     output = output + "<td>Alert Status</td>"
+    #     output = output + "<td>Overall Drowsiness</td>"
+    #     output = output + "<td>Time Elapsed</td>"
+    # elif selected == 5:
+    #     output = output + "<td>Alert Status</td>"
+    #     output = output + "<td>Overall Drowsiness</td>"
+    #     output = output + "<td>Time Elapsed</td>"
+    # elif selected == 6:
+    #     output = output + "<td>Heart Rate</td>"
+    #     output = output + "<td>Alert Status</td>"
+    #     output = output + "<td>Overall Drowsiness</td>"
+    #     output = output + "<td>Time Elapsed</td>"
+    #
+    # output = output + """
+    #     </tr></thead>
+    #     <!-- VVVV REPLACE WITH CALLS TO FILL FROM DATABASE DATA -->
+    #     <tbody>"""
+    #
+    # for i in range(len(data)):
+    #     output = output + "<tr>"
+    #     output = output + "<td>{}</td>".format(data[i]['date'])
+    #     output = output + "<td>{}</td>".format(data[i]['time'])
+    #
+    #     if selected == 1:
+    #         output = output + "<td>{}</td>".format(data[i]['heartrate'])
+    #     elif selected == 2:
+    #         output = output + "<td>{}</td>".format(data[i]['alertstatus'])
+    #         output = output + "<td>{}</td>".format(data[i]['timeelapsed'])
+    #     elif selected == 3:
+    #         output = output + \
+    #             "<td>{}</td>".format(data[i]['overalldrowsiness'])
+    #         output = output + "<td>{}</td>".format(data[i]['timeelapsed'])
+    #     elif selected == 4:
+    #         output = output + "<td>{}</td>".format(data[i]['alertstatus'])
+    #         output = output + \
+    #             "<td>{}</td>".format(data[i]['overalldrowsiness'])
+    #         output = output + "<td>{}</td>".format(data[i]['timeelapsed'])
+    #     elif selected == 5:
+    #         output = output + "<td>{}</td>".format(data[i]['alertstatus'])
+    #         output = output + \
+    #             "<td>{}</td>".format(data[i]['overalldrowsiness'])
+    #         output = output + "<td>{}</td>".format(data[i]['timeelapsed'])
+    #     elif selected == 6:
+    #         output = output + "<td>{}</td>".format(data[i]['heartrate'])
+    #         output = output + "<td>{}</td>".format(data[i]['alertstatus'])
+    #         output = output + \
+    #             "<td>{}</td>".format(data[i]['overalldrowsiness'])
+    #         output = output + "<td>{}</td>".format(data[i]['timeelapsed'])
+    #
+    #     output = output + "</tr>"
+    # output = output + """
+    #         </tbody>
+    #     </table>
+    # </div>
+    #     </div>
+    #     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    #     <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    #   </body>
+    # </html>
+    # """
+    # return output
 
 
 # -------------------------------------------------------------------------------------------------------------------
