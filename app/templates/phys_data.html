@@ -17,36 +17,55 @@
     </form>
     
     <h3>Physiological Data Information:</h3>
+        {{ table }}
+
+<!--    <table class="table">-->
+<!--        <thead>-->
+<!--            <tr>-->
+<!--                <th>Date</th>-->
+<!--                <th>Time</th>-->
+<!--                <th>Heart Rate</th>-->
+<!--                <th>Alert Status</th>-->
+<!--                <th>Overall Drowsiness Score</th>-->
+<!--                <th>Time Elapsed Since Last Alert</th>-->
+<!--            </tr>-->
+<!--        </thead>-->
+<!--        &lt;!&ndash; VVVV REPLACE WITH CALLS TO FILL FROM DATABASE DATA &ndash;&gt;-->
+<!--        <tbody>-->
+<!--&lt;!&ndash;        d = PhysData(date='11-24-2019', time='12:05:05', heartrate=70, overalldrowsiness=0.3, alertstatus='Awake', timeelapsed='47:35:24')&ndash;&gt;-->
+<!--            {% for data in physData %}-->
+<!--            <tr>-->
+<!--&lt;!&ndash;                <td>11/24/2019</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                <td>9:03:42:36</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                <td>72</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                <td>Awake</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                <td>24.00.00</td>&ndash;&gt;-->
+<!--&lt;!&ndash;            </tr>&ndash;&gt;-->
+<!--                <td>{{data.date}}</td>-->
+<!--                <td>{{data.time}}</td>-->
+<!--                <td>{{data.heartrate}}</td>-->
+<!--                <td>{{data.alertstatus}}</td>-->
+<!--                <td>{{data.overalldrowsiness}}</td>-->
+<!--                <td>{{data.timeelapsed}}</td>-->
+
+<!--            </tr>-->
+<!--            {% endfor %}-->
+<!--&lt;!&ndash;            <tr>&ndash;&gt;-->
+<!--&lt;!&ndash;                <td>11/24/2019</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                <td>9:03:42:36</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                <td>72</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                <td>Awake</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                <td>24.00.00</td>&ndash;&gt;-->
+<!--&lt;!&ndash;            </tr>&ndash;&gt;-->
+<!--&lt;!&ndash;                <td>11/24/2019</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                <td>13:27:17:01</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                <td>72</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                <td>Drowsy</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                <td>00.00.00</td>&ndash;&gt;-->
+
+<!--        </tbody>-->
+<!--    </table>-->
     
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Heart Rate</th>
-                <th>Alert Status</th>
-                <th>Time Elapsed Since Last Alert</th>
-            </tr>
-        </thead>
-        <!-- VVVV REPLACE WITH CALLS TO FILL FROM DATABASE DATA -->
-        <tbody>
-            <tr>
-                <td>11/24/2019</td>
-                <td>9:03:42:36</td>
-                <td>72</td>
-                <td>Awake</td>
-                <td>24.00.00</td>
-            </tr>
-                <td>11/24/2019</td>
-                <td>13:27:17:01</td>
-                <td>72</td>
-                <td>Drowsy</td>
-                <td>00.00.00</td>
-            <tr>
-            </tr>
-        </tbody>
-    </table>
-    
-    {{ table }}
+
 </div>
 {% endblock %}
