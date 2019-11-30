@@ -2,39 +2,50 @@
 
 import unittest
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 from app import db
 from app.models import Driver, WearableInfo, PhysData
+
+PATH = 'http://127.0.0.1:5000'
 
 
 class PageLoadTest(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())
 
     def tearDown(self):
         self.driver.quit()
 
     def test_wearableInfo(self):
-        self.driver.get('/werable_info')
-        # Make sure all wearables are listed
-        # Get Wearable names from Database
+        '''
+        test_wearableInfo ensures that the wearables are loaded into the selection menu
+        '''
+        self.driver.get(PATH + '/wearable_info')
         wearables = WearableInfo.query.all()
-        wearableNames = list()
+        # Get Wearable names from Database
+        wearableNamesDatabase = list()
         for wearable in wearables:
-            wearableNames.append(wearable.name)
+            wearableNamesDatabase.append(wearable.name)
         # Get Wearable names from Drop down
-        # element_to_check = self.driver.
+        wearableNamesWeb = list()
+        for index in range(len(wearableNamesDatabase)):
+            xpath = '//*[@id="wearable_name"]/option[' + str(index + 1) + ']'
+            element_to_check = self.driver.find_element_by_xpath(xpath)
+            wearableNamesWeb.append(element_to_check.text)
+        # Check that both sets are equal
+        self.assertEqual(set(wearableNamesWeb), set(wearableNamesDatabase))
 
     def test_physData(self):
-        self.driver.get('/phys_data')
+        '''
+        '''
+        self.driver.get(PATH + '/phys_data')
+        physData = PhysData.query.all()
 
     def test_drivers(self):
-        self.driver.get('/drivers')
-
-    # def test_main_page(self):
-    #     self.driver.get('/subpage/sub')
-    #     element_to_check = self.driver.find_element_by_tag_name(
-    #         'name_of_element_tag_you_want_to_check')
-    #     self.assertEqual(element_to_check.text, 'text that should be there')
+        '''
+        '''
+        self.driver.get(PATH + '/drivers')
+        drivers = Driver.query.all()
 
 
 if __name__ == '__main__':
