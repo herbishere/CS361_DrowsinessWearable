@@ -36,3 +36,4 @@ class PhysData(db.Model):
     def __repr__(self):
         return '<Date: {}; Drowsiness: {}; Alert Status: {}>'.format(self.date, self.overalldrowsiness, self.alertstatus)
 
+db.create_all()
