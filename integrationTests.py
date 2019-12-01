@@ -47,6 +47,21 @@ class PageLoadTest(unittest.TestCase):
         self.driver.get(PATH + '/drivers')
         drivers = Driver.query.all()
 
+        # Make sure that Wearable Names populated the correct corresponding database data
+        # Get Wearable names from Database
+        wearables = WearableInfo.query.all()
+        wearableNamesDatabase = list()
+        for wearable in wearables:
+            wearableNamesDatabase.append(wearable.name)
+        # Get Wearable names from Drop down
+        wearableNamesWeb = list()
+        for index in range(len(wearableNamesDatabase)):
+            xpath = '//*[@id="select_wearable"]/option[' + str(index + 1) + ']'
+            element_to_check = self.driver.find_element_by_xpath(xpath)
+            wearableNamesWeb.append(element_to_check.text)
+        # Check that both sets are equal
+        self.assertEqual(set(wearableNamesWeb), set(wearableNamesDatabase))
+
 
 if __name__ == '__main__':
     unittest.main()
