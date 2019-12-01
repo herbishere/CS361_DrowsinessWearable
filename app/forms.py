@@ -22,7 +22,7 @@ class DriverForm(FlaskForm):
 # Forms for the "Physiological Data" Page
 class PhysDataForm(FlaskForm):
     phys_data_type = SelectField('Metric', choices =[(1, "Heart Rate"), (2, "Alert History"), (3, "Alertness Score"), (4, "Drowsiness Threshold Score"), (5, "Alert Status"), (6, "All Data")], default = 1)
-    submit = SubmitField('Select Driver')
+    submit = SubmitField('Select Metric')
     
 class PhysTable(Table):
     classes = ['table','table-condensed']
@@ -47,4 +47,4 @@ class WearableInfoForm(FlaskForm):
 
 
     wearable_name = SelectField('Wearable Name', choices = choices2, default = 1)
-    submit = SubmitField('Select Driver')
+    submit = SubmitField('Submit')
