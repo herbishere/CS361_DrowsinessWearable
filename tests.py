@@ -80,3 +80,13 @@ if __name__ == '__main__':
         print("Test 1: FAILED Queried Data does not match data from insert.py\n")
 
     # Unit Test 2 - Change Value
+    s1 = UserSettings.query.all()[0]
+    s1.shock = 1
+    s1.noise = 0
+    s1.vibration = 0
+    db.session.commit()
+    s2 = UserSettings.query.all()[0]
+    if (s2.shock == 1 and s2.noise == 0 and s2.vibration == 0):
+        print("Test 2: PASSED Be able to correctly update data\n")
+    else:
+        print("Test 2: FAILED Not be able to update data\n")
