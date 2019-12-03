@@ -36,4 +36,21 @@ class PhysData(db.Model):
     def __repr__(self):
         return '<Date: {}; Drowsiness: {}; Alert Status: {}>'.format(self.date, self.overalldrowsiness, self.alertstatus)
 
+
+class UserSettings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    #1-shock; 2-noise; 3-vibration
+    #alertMode = db.Column(db.Integer)
+    shock = db.Column(db.Integer)
+    noise = db.Column(db.Integer)
+    vibration = db.Column(db.Integer)
+    alertFrequency = db.Column(db.Integer)
+
+    drowsinessThreshold = db.Column(db.Float)
+
+    def __repr__(self):
+        return '<shock: {}; noise {}; vibration: {}; alertFrequency: {}; drowsinessThreshold: {}>'.format(self.shock, self.noise, self.vibration, self.alertFrequency, self.drowsinessThreshold)
+
+
 db.create_all()

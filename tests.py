@@ -4,7 +4,8 @@ import unittest
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from app import db
-from app.models import Driver, WearableInfo, PhysData
+from app.models import Driver, WearableInfo, PhysData, UserSettings
+from insert import userSettings as userSettings_from_insert
 
 PATH = 'http://127.0.0.1:5000'
 
@@ -64,4 +65,12 @@ class PageLoadTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    # unittest.main()
+
+    # Database Unit Tests
+    # Unit Test 1 - Queried Data matches data from insert.py
+    usersettings = UserSettings.query.all()
+    print(usersettings)
+    userSettingsFromInsert = [userSettings_from_insert]
+    print(userSettingsFromInsert)
+    # Unit Test 2 - Change Value

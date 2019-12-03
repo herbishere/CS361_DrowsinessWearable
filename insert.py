@@ -1,8 +1,7 @@
 
 from app import db
-from app.models import Driver, WearableInfo, PhysData
+from app.models import Driver, WearableInfo, PhysData, UserSettings
 
-# Driver Database Initialization
 # Apple Drivers
 appleDrivers = [
     Driver(device='Apple Watch', driverName='Apple Driver1_000',
@@ -12,11 +11,6 @@ appleDrivers = [
     Driver(device='Apple Watch', driverName='Apple Driver1_002',
            version='1.002', releaseDate='10/24/2019', mostCurrent='Yes')
 ]
-
-for driver in appleDrivers:
-    db.session.add(driver)
-db.session.commit()
-
 # FitBit Drivers
 fitbitDrivers = [
     Driver(device='Fitbit', driverName='Fitbit Driver1_000',
@@ -26,48 +20,26 @@ fitbitDrivers = [
     Driver(device='Fitbit', driverName='Fitbit Driver1_101',
            version='1.101', releaseDate='11/24/2019', mostCurrent='Yes')
 ]
-
-for driver in fitbitDrivers:
-    db.session.add(driver)
-db.session.commit()
-
 # Necklace Drivers
 necklaceDrivers = [
     Driver(device='Necklace', driverName='Necklace Driver1_000',
            version='1.000', releaseDate='11/11/2019', mostCurrent='Yes')
 ]
-
-for driver in necklaceDrivers:
-    db.session.add(driver)
-db.session.commit()
-
 # Back brace drivers
 backbraceDrivers = [
     Driver(device='Back Brace', driverName='BackBrace Driver1_000',
            version='1.000', releaseDate='10/11/2019', mostCurrent='Yes')
 ]
-
-for driver in backbraceDrivers:
-    db.session.add(driver)
-db.session.commit()
-
-# Wearable Information Initialization
-
 wearableInfo = [
     WearableInfo(name='My Wearable', battery=90, type='Apple Watch',
                  selectedDriver='Apple Driver 1_002'),
     WearableInfo(name='Your Wearable', battery=100, type='Fitbit',
-                      selectedDriver='Fitbit Driver1_000'),
+                 selectedDriver='Fitbit Driver1_000'),
     WearableInfo(name='His Wearable', battery=50, type='Necklace',
                  selectedDriver='Necklace Driver1_000'),
     WearableInfo(name='Her Wearable', battery=25, type='Back Brace',
                  selectedDriver='BackBrace Driver1_000')
 ]
-
-for wearable in wearableInfo:
-    db.session.add(wearable)
-db.session.commit()
-
 physData = [
     PhysData(date='11-24-2019', time='12:05:05', heartrate=70,
              overalldrowsiness=0.3, alertstatus='Awake', timeelapsed='47:35:24'),
@@ -79,15 +51,52 @@ physData = [
              overalldrowsiness=0.27, alertstatus='Awake', timeelapsed='47:35:27')
 ]
 
-for data in physData:
-    db.session.add(data)
-db.session.commit()
+# Add User Settings
+# d = UserSettings(alertMode=2, alertFrequency=15, drowsinessThreshold=0.5)
+userSettings = UserSettings(shock=0, noise=0, vibration=1,
+                            alertFrequency=15, drowsinessThreshold=0.5)
 
-drivers = Driver.query.all()
-drivers
 
-wearables = WearableInfo.query.all()
-wearables
+if __name__ == '__main__':
+    # Driver Database Initialization
+    # Apple Drivers
+    for driver in appleDrivers:
+        db.session.add(driver)
+    db.session.commit()
+    # Fitbit Drivers
+    for driver in fitbitDrivers:
+        db.session.add(driver)
+    db.session.commit()
+    # Necklace Drivers
+    for driver in necklaceDrivers:
+        db.session.add(driver)
+    db.session.commit()
+    # Back brace drivers
+    for driver in backbraceDrivers:
+        db.session.add(driver)
+    db.session.commit()
 
-data = PhysData.query.all()
-data
+    # Wearable Information Initialization
+    for wearable in wearableInfo:
+        db.session.add(wearable)
+    db.session.commit()
+    # PhysData Initialization
+    for data in physData:
+        db.session.add(data)
+    db.session.commit()
+
+    # Add User Settings
+    db.session.add(userSettings)
+    db.session.commit()
+
+    drivers = Driver.query.all()
+    drivers
+
+    wearables = WearableInfo.query.all()
+    wearables
+
+    data = PhysData.query.all()
+    data
+
+    userSettings = UserSettings.query.all()
+    userSettings
