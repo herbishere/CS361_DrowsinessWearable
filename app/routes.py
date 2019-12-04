@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify, send_file, make_response
-from app import app
+from app import app, db
 from app.forms import DriverForm, PhysDataForm, WearableInfoForm, PhysTable, UserSettingsForm
 
 from app.models import Driver, WearableInfo, PhysData, UserSettings
@@ -43,8 +43,61 @@ def settings():
     usersettings = UserSettings.query.all()[0]
     form = UserSettingsForm(form_name='User Settings')
 
-    if request.method == 'GET':
+    # Render Page
+    if request.method == "GET":
         return render_template('settings.html', title='User Device Settings', form=form, usersetting=usersettings)
+    # Submit Form and Make Changes to Local Database
+    if request.method == 'POST':
+        # Get the Results as a UserSettings object
+        result = UserSettings()
+        if request.form.get("shock") == 'y':
+            result.shock = 1
+        else:
+            result.shock = 0
+
+        if request.form.get("vibration") == 'y':
+            result.vibration = 1
+        else:
+            result.vibration = 0
+
+        if request.form.get("noise") == 'y':
+            result.noise = 1
+        else:
+            result.noise = 0
+        result.alertFrequency = int(request.form.get('alertFrequency'))
+        result.drowsinessThreshold = float(
+            request.form.get('drowsinessThreshold'))
+
+        # # DEBUGGING: View Results
+        # print(result)  # settings from page
+        # print(usersettings)  # settings from database
+        # oldSettings = usersettings
+
+        # UPDATE values
+        if result.shock != usersettings.shock:
+            print("Updating shock in Database...")
+            usersettings.shock = result.shock
+        if result.vibration != usersettings.vibration:
+            print("Updating vibration in Database...")
+            usersettings.vibration = result.vibration
+        if result.noise != usersettings.noise:
+            print("Updating noise in Database...")
+            usersettings.noise = result.noise
+        if result.alertFrequency != usersettings.alertFrequency:
+            print("Updating alertFrequency in Database...")
+            usersettings.alertFrequency = result.alertFrequency
+        if result.drowsinessThreshold != usersettings.drowsinessThreshold:
+            print("Updating drowsinessThreshold in Database...")
+            usersettings.drowsinessThreshold = result.drowsinessThreshold
+        db.session.commit()  # Commit the changes
+
+        # # DEBUGGING: View Differences
+        # print(UserSettings.query.all()[0])  # View the Database Data
+        # print(oldSettings)  # View the Old Settings
+
+        usersettings_new = UserSettings.query.all()[0]
+        form_updated = UserSettingsForm(form_name='User Settings')
+        return render_template('settings.html', title='User Device Settings', form=form_updated, usersetting=usersettings_new)
 
 
 #     freq = 50
