@@ -99,17 +99,17 @@ class PageLoadTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    # Database Unit Tests
-    # Unit Test 1 - Queried Data matches data from insert.py
-    usersettings = UserSettings.query.all()[0]
-    if (usersettings.shock == userSettings_from_insert.shock and
-        usersettings.noise == userSettings_from_insert.noise and
-        usersettings.vibration == userSettings_from_insert.vibration and
-        usersettings.alertFrequency == userSettings_from_insert.alertFrequency and
-            usersettings.drowsinessThreshold == userSettings_from_insert.drowsinessThreshold):
-        print("Test 1: PASSED Queried Data matches data from insert.py\n")
-    else:
-        print("Test 1: FAILED Queried Data does not match data from insert.py\n")
+    # # Database Unit Tests
+    # # Unit Test 1 - Queried Data matches data from insert.py
+    # usersettings = UserSettings.query.all()[0]
+    # if (usersettings.shock == userSettings_from_insert.shock and
+    #     usersettings.noise == userSettings_from_insert.noise and
+    #     usersettings.vibration == userSettings_from_insert.vibration and
+    #     usersettings.alertFrequency == userSettings_from_insert.alertFrequency and
+    #         usersettings.drowsinessThreshold == userSettings_from_insert.drowsinessThreshold):
+    #     print("Test 1: PASSED Queried Data matches data from insert.py\n")
+    # else:
+    #     print("Test 1: FAILED Queried Data does not match data from insert.py\n")
 
     # # Unit Test 2 - Change Value
     # s1 = UserSettings.query.all()[0]
