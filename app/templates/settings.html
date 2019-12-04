@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block app_content %}
+<table class="table">
+    <h3>Debugging: View Database Values</h3>
+    <tbody>
+        <tr>
+            <td>Shock</th>
+            <td>{{usersetting.shock}}</td>
+        </tr>
+        <tr>
+            <td>Noise</th>
+            <td>{{usersetting.noise}}</td>
+        </tr>
+        <tr>
+            <td>Noise</th>
+            <td>{{usersetting.vibration}}</td>
+        </tr>
+        <tr>
+            <td>Vibration</th>
+            <td>{{usersetting.alertFrequency}}</td>
+        </tr>
+        <tr>
+            <td>Drowsiness Score</th>
+            <td>{{usersetting.drowsinessThreshold}}</td>
+        </tr>
+    </tbody>
+</table>
+
+<form action="" method="post">
+    <fieldset>
+        <legend>Modify User Settings:</legend>
+        <div class="form-group required">
+            {{ form.csrf_token }}
+            {{ form.shock.label(class="form-control-label") }}
+            {{ form.shock(class="form-control") }}
+        </div>
+        <div class="form-group required">
+            {{ form.csrf_token }}
+            {{ form.vibration.label(class="form-control-label") }}
+            {{ form.vibration(class="form-control") }}
+        </div>
+        <div class="form-group required">
+            {{ form.csrf_token }}
+            {{ form.noise.label(class="form-control-label") }}
+            {{ form.noise(class="form-control") }}
+        </div>
+        <div class="form-group required">
+            {{ form.csrf_token }}
+            {{ form.alertFrequency.label(class="form-control-label") }}
+            {{ form.alertFrequency(class="form-control") }}
+        </div>
+        <div class="form-group required">
+            {{ form.csrf_token }}
+            {{ form.drowsinessThreshold.label(class="form-control-label") }}
+            {{ form.drowsinessThreshold(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.submit(class="form-control") }}
+        </div>
+    </fieldset>
+</form>
+{% endblock %}
