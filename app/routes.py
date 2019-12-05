@@ -422,13 +422,6 @@ def phys_data():
     print("Going to redirect...")
     return redirect(url_for('phys_data'))
 
-
-def file_downloads():
-    try:
-        return render_template('dl_phys_data.html')
-    except Exception as e:
-        return str(e)
-
 # -------------------------------------------------------------------------------------------------------------------
 # Get the Wearable information page
 @app.route('/wearable_info', methods=['GET', 'POST'])
@@ -471,9 +464,21 @@ def _get_drivers():
 
 # -------------------------------------------------------------------------------------------------------------------
 # Download physiological data table
-@app.route("/return_table/")
-def return_tables():
-    try:
-        return send_file("/example_file.txt", attachment_filename="example.txt")
-    except Exception as e:
-        return str(e)
+@app.route("/files", methods=['GET', 'POST'])
+def download_file():
+    
+    physData = PhysData.query.all()
+    form = PhysDataForm()
+    selected = request.form.get('phys_data_type')       #phys data type selection
+    print(selected)
+    
+    if request.method == "POST":
+        return send_file('outputs/all_data.csv',
+                 mimetype='text/csv',
+                 attachment_filename='report.csv',
+                 as_attachment=True)
+
+    else:
+
+        return render_template('phys_data.html', title='Driver Selection', form=form, physData = physData )
+
