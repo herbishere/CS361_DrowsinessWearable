@@ -63,17 +63,20 @@ class WearableInfoForm(FlaskForm):
 
 class UserSettingsForm(FlaskForm):
     # Get Defaults
-    userSettings = UserSettings.query.all()[0]
+    if UserSettings.query.all():
+        userSettings = UserSettings.query.all()[0]
 
-    form_name = HiddenField('Form Name')
+        form_name = HiddenField('Form Name')
 
-    shock = BooleanField('Shock Enabled?', default=bool(userSettings.shock))
-    noise = BooleanField('Noise Enabled?', default=bool(userSettings.noise))
-    vibration = BooleanField('Vibration Enabled?',
-                             default=bool(userSettings.vibration))
-    alertFrequency = IntegerField('Alert Frequency (Hz)', validators=[
-                                  NumberRange(min=0, max=100, message='test')], default=userSettings.alertFrequency)
-    drowsinessThreshold = DecimalField('Drowsiness Threshold', validators=[
-                                       NumberRange(min=0, max=1, message='test')], default=userSettings.drowsinessThreshold)
+        shock = BooleanField(
+            'Shock Enabled?', default=bool(userSettings.shock))
+        noise = BooleanField(
+            'Noise Enabled?', default=bool(userSettings.noise))
+        vibration = BooleanField('Vibration Enabled?',
+                                 default=bool(userSettings.vibration))
+        alertFrequency = IntegerField('Alert Frequency (Hz)', validators=[
+            NumberRange(min=0, max=100, message='test')], default=userSettings.alertFrequency)
+        drowsinessThreshold = DecimalField('Drowsiness Threshold', validators=[
+            NumberRange(min=0, max=1, message='test')], default=userSettings.drowsinessThreshold)
 
-    submit = SubmitField('Submit')
+        submit = SubmitField('Submit')
