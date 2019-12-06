@@ -472,7 +472,7 @@ def download_file():
     selected = request.form.get('phys_data_type')       #phys data type selection
     print(selected)
     
-    if request.method == "POST":
+    if request.method == "GET":
         return send_file('outputs/all_data.csv',
                  mimetype='text/csv',
                  attachment_filename='report.csv',
