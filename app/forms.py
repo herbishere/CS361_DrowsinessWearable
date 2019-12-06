@@ -63,9 +63,9 @@ class WearableInfoForm(FlaskForm):
 
 class UserSettingsForm(FlaskForm):
     # Get Defaults
+    # Set Default Values Based on UserSettings table, if present
     if UserSettings.query.all():
         userSettings = UserSettings.query.all()[0]
-
         form_name = HiddenField('Form Name')
 
         shock = BooleanField(
@@ -78,5 +78,17 @@ class UserSettingsForm(FlaskForm):
             NumberRange(min=0, max=100, message='test')], default=userSettings.alertFrequency)
         drowsinessThreshold = DecimalField('Drowsiness Threshold', validators=[
             NumberRange(min=0, max=1, message='test')], default=userSettings.drowsinessThreshold)
+
+        submit = SubmitField('Submit')
+    # Otherwise, just normally create form
+    else:
+        form_name = HiddenField('Form Name')
+        shock = BooleanField('Shock Enabled?')
+        noise = BooleanField('Noise Enabled?')
+        vibration = BooleanField('Vibration Enabled?')
+        alertFrequency = IntegerField('Alert Frequency (Hz)', validators=[
+                                      NumberRange(min=0, max=100, message='test')])
+        drowsinessThreshold = DecimalField('Drowsiness Threshold', validators=[
+                                           NumberRange(min=0, max=1, message='test')])
 
         submit = SubmitField('Submit')
