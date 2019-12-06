@@ -23,6 +23,8 @@ Download and install the following Python libraries:
 
 `bs4`
 
+`os`
+
 Initialize the local database by running:
 
 `flask db init`
