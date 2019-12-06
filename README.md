@@ -21,6 +21,8 @@ Download and install the following Python libraries:
 
 `flask_table`
 
+`bs4`
+
 Initialize the local database by running:
 
 `flask db init`
