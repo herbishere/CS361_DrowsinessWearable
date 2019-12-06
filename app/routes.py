@@ -1,5 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify, send_file, make_response
 import csv
+import os
 from bs4 import BeautifulSoup
 from app import app, db
 from app.forms import DriverForm, PhysDataForm, WearableInfoForm, PhysTable, UserSettingsForm
@@ -427,7 +428,7 @@ def phys_data():
             for column in columns:
                 output_row.append(column.text)
             output_rows.append(output_row)
-        write_file = open('report.csv', 'w')
+        write_file = open(os.getcwd() + '/report.csv', 'w')
         # print("WRITE FUNC")
         # print(os.getcwd())
         with write_file as csvfile:
@@ -494,7 +495,7 @@ def download_file():
     if request.method == "GET":
         # print("DL FUNC")
         # print(os.getcwd())
-        return send_file('../fresh_wearable/report.csv',
+        return send_file(os.getcwd() + '/report.csv',
                  mimetype='text/csv',
                  attachment_filename='report.csv',
                  as_attachment=True)
