@@ -15,7 +15,10 @@
             </div>
         </fieldset>
     </form>
-    <a href="/files" target="blank"><button class='btn btn-default'>Download Table!</button></a>
+    <form action="/files" method="GET">
+        <button class='btn btn-default'>Download Table!</button>
+    </form>
+    
     <h3>Physiological Data Information:</h3>
         {{ table }}
     
