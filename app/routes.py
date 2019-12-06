@@ -428,8 +428,8 @@ def phys_data():
                 output_row.append(column.text)
             output_rows.append(output_row)
         write_file = open('report.csv', 'w')
-        print("WRITE FUNC")
-        print(os.getcwd())
+        # print("WRITE FUNC")
+        # print(os.getcwd())
         with write_file as csvfile:
             #print("NEXT IS THE TABLE")
             #print(output_rows)
@@ -492,8 +492,8 @@ def _get_drivers():
 def download_file():
     
     if request.method == "GET":
-        print("DL FUNC")
-        print(os.getcwd())
+        # print("DL FUNC")
+        # print(os.getcwd())
         return send_file('../fresh_wearable/report.csv',
                  mimetype='text/csv',
                  attachment_filename='report.csv',
