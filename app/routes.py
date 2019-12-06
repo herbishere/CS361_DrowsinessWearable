@@ -1,8 +1,11 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify, send_file, make_response
+import csv
+from bs4 import BeautifulSoup
 from app import app, db
 from app.forms import DriverForm, PhysDataForm, WearableInfoForm, PhysTable, UserSettingsForm
 
 from app.models import Driver, WearableInfo, PhysData, UserSettings
+
 
 
 @app.route('/')
@@ -413,6 +416,27 @@ def phys_data():
             table = PhysTable(physData)
             table.heartrate.show = table.alertstatus.show = table.timeelapsed.show = table.overalldrowsiness.show = True
 
+        # This is for downloading the table
+        html = render_template('phys_data.html', title='Driver Selection', form=form, table = table)
+        soup = BeautifulSoup(html, 'html.parser')
+        dl_tbl = soup.find("table")
+        output_rows = []
+        for table_row in dl_tbl.findAll('tr'):
+            columns = table_row.findAll('td')
+            output_row = []
+            for column in columns:
+                output_row.append(column.text)
+            output_rows.append(output_row)
+        write_file = open('report.csv', 'w')
+        print("WRITE FUNC")
+        print(os.getcwd())
+        with write_file as csvfile:
+            #print("NEXT IS THE TABLE")
+            #print(output_rows)
+            writer = csv.writer(csvfile)
+            writer.writerows(output_rows)
+        write_file.close()
+            
         return render_template('phys_data.html', title='Driver Selection', form=form, table=table)
 
     if form.validate_on_submit() and request.form['form_name'] == 'Drivers':
@@ -467,18 +491,11 @@ def _get_drivers():
 @app.route("/files", methods=['GET', 'POST'])
 def download_file():
     
-    physData = PhysData.query.all()
-    form = PhysDataForm()
-    selected = request.form.get('phys_data_type')       #phys data type selection
-    print(selected)
-    
     if request.method == "GET":
-        return send_file('outputs/all_data.csv',
+        print("DL FUNC")
+        print(os.getcwd())
+        return send_file('../fresh_wearable/report.csv',
                  mimetype='text/csv',
                  attachment_filename='report.csv',
                  as_attachment=True)
-
-    else:
-
-        return render_template('phys_data.html', title='Driver Selection', form=form, physData = physData )
 
