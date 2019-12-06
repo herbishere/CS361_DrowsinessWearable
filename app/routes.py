@@ -495,7 +495,7 @@ def download_file():
     if request.method == "GET":
         # print("DL FUNC")
         # print(os.getcwd())
-        return send_file(os.getcwd() + '/report.csv',
+        return send_file('outputs/report.csv',
                  mimetype='text/csv',
                  attachment_filename='report.csv',
                  as_attachment=True)
